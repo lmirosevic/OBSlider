@@ -16,6 +16,7 @@
 @property (assign, nonatomic, readwrite) float scrubbingSpeed;
 @property (assign, nonatomic, readwrite) float realPositionValue;
 @property (assign, nonatomic) CGPoint beganTrackingLocation;
+
 @property (assign, nonatomic) BOOL isVirginTouch;
 
 - (NSUInteger)indexOfLowerScrubbingSpeed:(NSArray*)scrubbingSpeedPositions forOffset:(CGFloat)verticalOffset;
@@ -46,6 +47,16 @@
     return self;
 }
 
+
+#pragma mark - custom accessors
+
+-(CGFloat)vanillaValueForTouch:(UITouch *)touch {
+    CGFloat proportion = [touch locationInView:self].x / self.bounds.size.width;
+    proportion = ThresholdFloat(proportion, 0, 1);
+    CGFloat value = self.minimumValue + proportion * (self.maximumValue - self.minimumValue);
+    
+    return value;
+}
 
 #pragma mark - NSCoding
 
@@ -88,11 +99,9 @@
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
 {
 //    BOOL beginTracking = [super beginTrackingWithTouch:touch withEvent:event];
-
-    BOOL beginTracking = YES;
     
-    if (beginTracking)
-    {
+//    if (beginTracking)
+//    {
         self.isVirginTouch = YES;
         
 		// Set the beginning tracking location to the centre of the current
@@ -105,8 +114,10 @@
         self.beganTrackingLocation = CGPointMake(thumbRect.origin.x + thumbRect.size.width / 2.0f, 
 												 thumbRect.origin.y + thumbRect.size.height / 2.0f); 
         self.realPositionValue = self.value;
-    }
-    return beginTracking;
+//    }
+//    return beginTracking;
+    
+    return YES;
 }
 
 - (BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
@@ -117,8 +128,6 @@
     CGFloat yDisplacement = currentLocation.y - previousLocation.y;
     CGFloat xDisplacement = currentLocation.x - previousLocation.x;
     CGFloat totalXDisplacement = currentLocation.x - self.beganTrackingLocation.x;
-    
-//    l(@"dis: %f", totalXDisplacement);//foo
     
     //make sure that any predominantly downwards movements are ignored when it comes to changing the slider value
     BOOL ignoreCurrentMove = NO;
@@ -155,7 +164,7 @@
              ((self.beganTrackingLocation.y > currentLocation.y) && (currentLocation.y > previousLocation.y)) )
             {
             // We are getting closer to the slider, go closer to the real location
-            thumbAdjustment = (self.realPositionValue - self.value) / (1 + fabsf(currentLocation.y - self.beganTrackingLocation.y));
+            thumbAdjustment = ([self vanillaValueForTouch:touch] - self.value) / (1 + fabsf(currentLocation.y - self.beganTrackingLocation.y));
         }
         self.value += valueAdjustment + thumbAdjustment;
 
