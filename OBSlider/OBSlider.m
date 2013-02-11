@@ -97,32 +97,24 @@
 #pragma mark -
 #pragma mark Touch tracking
 
-- (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
-{
-//    BOOL beginTracking = [super beginTrackingWithTouch:touch withEvent:event];
+- (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
+    self.isVirginTouch = YES;
     
-//    if (beginTracking)
-//    {
-        self.isVirginTouch = YES;
-        
-		// Set the beginning tracking location to the centre of the current
-		// position of the thumb. This ensures that the thumb is correctly re-positioned
-		// when the touch position moves back to the track after tracking in one
-		// of the slower tracking zones.
-		CGRect thumbRect = [self thumbRectForBounds:self.bounds 
-										  trackRect:[self trackRectForBounds:self.bounds]
-											  value:self.value];
-        self.beganTrackingLocation = CGPointMake(thumbRect.origin.x + thumbRect.size.width / 2.0f, 
-												 thumbRect.origin.y + thumbRect.size.height / 2.0f); 
-        self.realPositionValue = self.value;
-//    }
-//    return beginTracking;
+    // Set the beginning tracking location to the centre of the current
+    // position of the thumb. This ensures that the thumb is correctly re-positioned
+    // when the touch position moves back to the track after tracking in one
+    // of the slower tracking zones.
+    CGRect thumbRect = [self thumbRectForBounds:self.bounds 
+                                      trackRect:[self trackRectForBounds:self.bounds]
+                                          value:self.value];
+    self.beganTrackingLocation = CGPointMake(thumbRect.origin.x + thumbRect.size.width / 2.0f, 
+                                             thumbRect.origin.y + thumbRect.size.height / 2.0f); 
+    self.realPositionValue = self.value;
     
     return YES;
 }
 
-- (BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
-{
+- (BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
     //get info about track
     CGPoint previousLocation = [touch previousLocationInView:self];
     CGPoint currentLocation  = [touch locationInView:self];
@@ -133,7 +125,7 @@
     //make sure that any predominantly downwards movements are ignored when it comes to changing the slider value
     BOOL ignoreCurrentMove = NO;
     
-    //if it goes down more than it goes either left or right
+    //ignore move if it goes down more than it goes either left or right
     if (yDisplacement/ScalarAbsolute(xDisplacement) > 1.0) {
         ignoreCurrentMove = YES;
     }
@@ -144,10 +136,8 @@
             self.isVirginTouch = NO;
         }
     }
-
     
-    if (self.tracking && !ignoreCurrentMove)
-    {
+    if (self.tracking && !ignoreCurrentMove) {
         // Find the scrubbing speed that curresponds to the touch's vertical offset
         CGFloat verticalOffset = fabsf(currentLocation.y - self.beganTrackingLocation.y);
         NSUInteger scrubbingSpeedChangePosIndex = [self indexOfLowerScrubbingSpeed:self.scrubbingSpeedChangePositions forOffset:verticalOffset];        
