@@ -97,7 +97,8 @@
 #pragma mark -
 #pragma mark Touch tracking
 
-- (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
+- (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
+{
     self.isVirginTouch = YES;
     
     // Set the beginning tracking location to the centre of the current
@@ -114,7 +115,8 @@
     return YES;
 }
 
-- (BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
+- (BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
+{
     //get info about track
     CGPoint previousLocation = [touch previousLocationInView:self];
     CGPoint currentLocation  = [touch locationInView:self];
@@ -126,18 +128,22 @@
     BOOL ignoreCurrentMove = NO;
     
     //ignore move if it goes down more than it goes either left or right
-    if (yDisplacement/ScalarAbsolute(xDisplacement) > 1.0) {
+    if (yDisplacement/ScalarAbsolute(xDisplacement) > 1.0)
+    {
         ignoreCurrentMove = YES;
     }
     
     //make sure it doesnt start moving the slider until the movements become significant
-    if (self.isVirginTouch) {
-        if (ScalarAbsolute(totalXDisplacement) >= kMinimumTouchDisplacement) {
+    if (self.isVirginTouch)
+    {
+        if (ScalarAbsolute(totalXDisplacement) >= kMinimumTouchDisplacement)
+        {
             self.isVirginTouch = NO;
         }
     }
     
-    if (self.tracking && !ignoreCurrentMove) {
+    if (self.tracking && !ignoreCurrentMove)
+    {
         // Find the scrubbing speed that curresponds to the touch's vertical offset
         CGFloat verticalOffset = fabsf(currentLocation.y - self.beganTrackingLocation.y);
         NSUInteger scrubbingSpeedChangePosIndex = [self indexOfLowerScrubbingSpeed:self.scrubbingSpeedChangePositions forOffset:verticalOffset];        
