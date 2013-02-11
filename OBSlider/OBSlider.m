@@ -52,7 +52,7 @@
 
 -(CGFloat)vanillaValueForTouch:(UITouch *)touch {
     CGFloat proportion = [touch locationInView:self].x / self.bounds.size.width;
-    proportion = ThresholdFloat(proportion, 0, 1);
+    proportion = ThresholdCGFloat(proportion, 0, 1);
     CGFloat value = self.minimumValue + proportion * (self.maximumValue - self.minimumValue);
     
     return value;
