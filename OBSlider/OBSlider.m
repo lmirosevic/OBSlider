@@ -4,7 +4,7 @@
 //  Created by Ole Begemann on 02.01.11.
 //  Copyright 2011 Ole Begemann. All rights reserved.
 //
-//  Modified and made 100x better by Luka Mirosevic. November 2012. Copyright Goonbee
+//  Original by Ole Begemann. Modifications applied by Luka Mirosevic. November 2012.
 
 #define kMinimumTouchDisplacement 10.0
 
